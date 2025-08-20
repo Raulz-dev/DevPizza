@@ -1,4 +1,4 @@
-# 🍕 Pizzaria — Backend
+# 🍕 Pizzaria 
 
 ## API REST para atendimento no salão
 
@@ -27,6 +27,7 @@ Foco em fluxo simples e bem estruturado: mesas, funcionários, cardápio, pedido
 ## Visão Geral
 
 Este backend oferece uma base sólida para operar o salão de uma pizzaria. A proposta é manter um MVP claro e direto, sem cupons, tamanhos, modificadores ou descontos, priorizando confiabilidade, legibilidade e expansão futura.
+Frontend (interface web): com React para uma navegação rápida, intuitiva e responsiva no ambiente operacional.
 
 ---
 
@@ -48,6 +49,7 @@ Este backend oferece uma base sólida para operar o salão de uma pizzaria. A pr
 * **Prisma ORM + PostgreSQL:** camada de dados moderna e confiável.
 * **Organização por camadas:** rotas, controllers, utilitários e acesso a dados.
 * **Configuração por ambiente:** variáveis para porta e conexão ao banco.
+* **React com Vite:** Interface rica em detalhes e responsividade
 
 ---
 
@@ -99,6 +101,7 @@ Este backend oferece uma base sólida para operar o salão de uma pizzaria. A pr
 * Node.js 18 ou superior.
 * PostgreSQL acessível (local ou gerenciado).
 * Ambiente configurado com variáveis para URL do banco e porta do servidor.
+* React 
 
 ---
 
