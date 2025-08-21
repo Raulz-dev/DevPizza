@@ -1,7 +1,8 @@
-import {Router } from "express"
+import { Router } from "express";
+import tableRoutes from "./table/tableRoutes";
 
-const routes = Router()
+const routes = Router();
 
+routes.use(tableRoutes);
 
-
-export default routes
+export default routes;
