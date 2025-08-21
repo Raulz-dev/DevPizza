@@ -13,6 +13,10 @@ export const updateTableService = async (
   data: UpdateTableData
 ): Promise<Table> => {
   try {
+    const table = await prisma.table.findUnique({ where: { id } });
+
+    if (!table) throw new Error("Mesa não encontrada!");
+
     const updated = await prisma.table.update({
       where: { id },
       data: {
@@ -21,6 +25,7 @@ export const updateTableService = async (
         status: data.status,
       },
     });
+
     return updated;
   } catch (error) {
     console.error(error);

@@ -13,15 +13,18 @@ export const createTableService = async (
 ): Promise<Table> => {
   try {
     const { numeroMesa, status, quantidadeDeCadeiras } = tableData;
+
     if (!numeroMesa || !status || !quantidadeDeCadeiras)
       throw new Error(
         "Numero da mesa, status e quantidade de cadeiras são obrigatórias"
       );
+
     const oldTable = await prisma.table.findUnique({
       where: {
         number: numeroMesa,
       },
     });
+
     if (oldTable) throw new Error("Uma mesa com essa numeração jà existe!");
 
     const table = await prisma.table.create({
@@ -31,6 +34,7 @@ export const createTableService = async (
         status: status,
       },
     });
+
     return table;
   } catch (error) {
     console.log(error);

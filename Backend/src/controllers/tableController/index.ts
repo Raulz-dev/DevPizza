@@ -63,7 +63,7 @@ export const updateTable = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const validation = updateTableSchema.safeParse(req.body);
-
+   
     if (!validation.success) {
       return res.status(400).json({ error: validation.error.format() });
     }

@@ -1,19 +1,16 @@
-
 import { Router } from "express";
-import {
-  getAllTables,
-  getOneTable,
-  createTables,
-  updateTable,
-  deleteTable,
-} from "../../controllers/tableController";
+import * as tableController from "../../controllers/tableController";
 
 const tableRoutes = Router();
 
-tableRoutes.get("/tables", getAllTables);
-tableRoutes.get("/tables/:id", getOneTable);
-tableRoutes.post("/tables", createTables);
-tableRoutes.put("/tables/:id", updateTable);
-tableRoutes.delete("/tables/:id", deleteTable);
+tableRoutes.get("/tables", tableController.getAllTables);
+
+tableRoutes.get("/tables/:id", tableController.getOneTable);
+
+tableRoutes.post("/tables", tableController.createTables);
+
+tableRoutes.put("/tables/:id", tableController.updateTable);
+
+tableRoutes.delete("/tables/:id", tableController.deleteTable);
 
 export default tableRoutes;
