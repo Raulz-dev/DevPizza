@@ -11,12 +11,7 @@ import {
 
 export const getAllReservations = async (req: Request, res: Response) => {
   try {
-    const reservations = await prisma.reservation.findMany({
-      orderBy: { reservedFor: "asc" },
-      include: {
-        table: { select: { id: true, number: true, status: true } },
-      },
-    });
+    const reservations = await prisma.reservation.findMany();
     return res.status(200).json(reservations);
   } catch (error) {
     console.log(error);
