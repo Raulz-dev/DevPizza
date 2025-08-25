@@ -3,10 +3,10 @@ import * as menuItemController from "../../controllers/MenuItemController";
 
 const menuItemRoutes = Router();
 
-menuItemRoutes.get("/menu-items", menuItemController.getAllMenuItems);
-menuItemRoutes.get("/menu-items/:id", menuItemController.getMenuItemById);
-menuItemRoutes.post("/menu-items", menuItemController.createMenuItem);
-menuItemRoutes.put("/menu-items/:id", menuItemController.updateMenuItem);
-menuItemRoutes.delete("/menu-items/:id", menuItemController.deleteMenuItem);
+menuItemRoutes.get("/menuItems", menuItemController.getAllMenuItems);
+menuItemRoutes.get("/menuItems/:id", menuItemController.getMenuItemById);
+menuItemRoutes.post("/menuItems", menuItemController.createMenuItem);
+menuItemRoutes.put("/menuItems/:id", menuItemController.updateMenuItem);
+menuItemRoutes.delete("/menuItems/:id", menuItemController.deleteMenuItem);
 
 export default menuItemRoutes;
