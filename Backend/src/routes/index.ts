@@ -5,6 +5,7 @@ import reservationRoutes from "./Reservation/reservationRoutes";
 import categoryRoutes from "./category/categoryRoutes";
 import menuItemRoutes from "./menuItem/menuItemRoutes";
 import orderRoutes from "./order/orderRoutes";
+import paymentRoutes from "./payment/paymentRoutes";
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use(reservationRoutes);
 routes.use(categoryRoutes);
 routes.use(menuItemRoutes);
 routes.use(orderRoutes);
+routes.use(paymentRoutes);
 
 export default routes;
