@@ -1,0 +1,1 @@
+export type OrderStatus = "OPEN" | "IN_PROGRESS" | "CLOSED" | "CANCELED";

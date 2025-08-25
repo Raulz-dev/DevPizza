@@ -1,14 +1,9 @@
 import { Employee } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import { gerarHashDaSenha } from "../../helper/bcrypt";
+import { UpdateEmployeeData } from "../../types/employee";
 
-type UpdateEmployeeData = {
-  name?: string;
-  email?: string;
-  senha?: string;
-  cargo?: string;
-  turno?: string;
-};
+
 
 export const updateEmployeeService = async (
   id: number,

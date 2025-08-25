@@ -1,7 +1,8 @@
 import { Order } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
+import { OrderStatus } from "../../types/order";
 
-type OrderStatus = "OPEN" | "IN_PROGRESS" | "CLOSED" | "CANCELED";
+
 
 interface UpdateOrderData {
   tableId?: number;
