@@ -1,9 +1,6 @@
-# 🍕 Pizzaria 
+# 🍕 Pizzaria — Aplicação Fullstack
 
-## API REST para atendimento no salão
-
-Sistema de gestão de pizzaria desenvolvido com Node.js, Express, TypeScript, Prisma e PostgreSQL.
-Foco em fluxo simples e bem estruturado: mesas, funcionários, cardápio, pedidos, itens de pedido e pagamentos.
+**Gestão completa de pedidos, mesas e contas** para pizzaria, com **Node.js/Express + TypeScript + Prisma + PostgreSQL** no backend e **React + Vite** no frontend. Autenticação por **JWT**, organização por controladores e modelo de dados claro, pensando em operação de salão (mesas/reservas), cardápio, pedidos/contas e pagamentos.
 
 ---
 
@@ -11,125 +8,151 @@ Foco em fluxo simples e bem estruturado: mesas, funcionários, cardápio, pedido
 
 * [Visão Geral](#visão-geral)
 * [Funcionalidades](#funcionalidades)
-* [Arquitetura e Tecnologias](#arquitetura-e-tecnologias)
-* [Estrutura do Projeto](#estrutura-do-projeto)
+* [Arquitetura & Tecnologias](#arquitetura--tecnologias)
 * [Modelagem de Dados (Resumo)](#modelagem-de-dados-resumo)
 * [Fluxo de Uso](#fluxo-de-uso)
+* [Autenticação & Autorização](#autenticação--autorização)
 * [Endpoints (Resumo)](#endpoints-resumo)
-* [Requisitos](#requisitos)
-* [Como Executar](#como-executar)
+* [Variáveis de Ambiente](#variáveis-de-ambiente)
 * [Decisões de Design](#decisões-de-design)
-* [Roadmap](#roadmap)
-* [Licença](#licença)
+
+
 
 ---
 
 ## Visão Geral
 
-Este backend oferece uma base sólida para operar o salão de uma pizzaria. A proposta é manter um MVP claro e direto, sem cupons, tamanhos, modificadores ou descontos, priorizando confiabilidade, legibilidade e expansão futura.
-Frontend (interface web): com React para uma navegação rápida, intuitiva e responsiva no ambiente operacional.
+Aplicação **fullstack** com foco em **operar o salão** de uma pizzaria: criação e gerenciamento de **mesas** e **reservas**, **cardápio** por categorias/itens, **pedidos (contas/comanda)** com itens e **pagamentos**. O frontend em React+Vite fornece um painel rápido e responsivo; o backend em Node+Express expõe uma API REST enxuta e segura (JWT).
 
 ---
 
 ## Funcionalidades
 
-* **Mesas:** criação, listagem e controle de status (livre, ocupada, reservada, bloqueada).
-* **Funcionários:** cadastro com cargo e turno.
-* **Cardápio:** categorias e itens com preço único por item.
-* **Pedidos:** abertura, acompanhamento por status e fechamento.
-* **Itens do pedido:** quantidade, preço unitário (snapshot) e observações.
-* **Pagamentos:** registro por pedido com múltiplos métodos.
+* **Mesas**: criar, listar, atualizar status (livre/ocupada/reservada/bloqueada).
+* **Reservas**: marcação por mesa/horário, status (ativa, concluída, cancelada).
+* **Funcionários**: cadastro (nome/email/telefone), **cargo** e **turno**, controle de acesso por **perfil**.
+* **Cardápio**: categorias (ordenadas) e itens (nome, descrição, preço único, ativo).
+* **Pedidos/Contas**: abrir (mesa/balcão/viagem), adicionar itens (snapshot de preço), acompanhar status, fechar.
+* **Pagamentos**: múltiplos métodos por pedido/conta, fechar somente quando total quitado.
+
 
 ---
 
-## Arquitetura e Tecnologias
+## Arquitetura & Tecnologias
 
-* **Node.js + Express:** servidor HTTP e roteamento.
-* **TypeScript:** tipagem estática para segurança e manutenção.
-* **Prisma ORM + PostgreSQL:** camada de dados moderna e confiável.
-* **Organização por camadas:** rotas, controllers, utilitários e acesso a dados.
-* **Configuração por ambiente:** variáveis para porta e conexão ao banco.
-* **React com Vite:** Interface rica em detalhes e responsividade
+* **Backend**: Node.js, Express, TypeScript, Prisma ORM, PostgreSQL, JWT.
+* **Frontend**: React + Vite (TypeScript), React Router, React Query, Axios, CSS Modules.
+* **Qualidade**: ESLint, Prettier (opcional), Zod/React Hook Form (forms no front).
+* **Padrões**: camadas (routes → controllers → services → prisma), DTOs, interceptors HTTP, variáveis de ambiente.
 
----
-
-## Estrutura do Projeto
-
-* **Prisma:** definição do schema e migrações do banco.
-* **Controllers:** regras de negócio de mesas, cardápio, pedidos e pagamentos.
-* **Routes:** mapeamento dos endpoints públicos.
-* **Utils:** funções auxiliares (ex.: recálculo de total do pedido).
-* **App/DB:** inicialização do servidor e conexão ao banco de dados.
+```
+client (React/Vite)  ⇄  API REST (Express/TS)  ⇄  Prisma ORM  ⇄  PostgreSQL
+```
 
 ---
 
 ## Modelagem de Dados (Resumo)
 
-* **Funcionário:** nome, email, telefone, cargo, turno, ativo.
-* **Mesa:** número único, capacidade, status.
-* **Cliente (opcional):** nome, telefone, email.
-* **Categoria do Cardápio:** nome único, ordenação.
-* **Item do Cardápio:** nome, descrição, preço, ativo, categoria.
-* **Pedido:** tipo (mesa, balcão, viagem), status, mesa/cliente, aberto/fechado por, total.
-* **Item do Pedido:** item de cardápio, quantidade, preço unitário (snapshot), observações.
-* **Pagamento:** pedido, método, valor, data, troco (opcional).
+
+
+* **Employee** (Funcionário): `id`, `name`, `email`, `phone?`, `role` (`ADMIN`|`MANAGER`|`WAITER`|`KITCHEN`), `shift`, `active`.
+* **Table** (Mesa): `id`, `number` (único), `capacity`, `status` (`FREE`|`OCCUPIED`|`RESERVED`|`BLOCKED`).
+* **Reservation** (Reserva): `id`, `tableId`, `customerName`, `customerPhone?`, `startsAt`, `endsAt?`, `status`.
+* **Category** (Categoria): `id`, `name` (único), `sortIndex`.
+* **MenuItem** (Item do Menu): `id`, `name`, `description?`, `price` (decimal), `active`, `categoryId`.
+* **Order** (Pedido/Conta): `id`, `type` (`TABLE`|`COUNTER`|`TAKEAWAY`), `tableId?`, `status` (`OPEN`|`IN_PROGRESS`|`CLOSED`|`CANCELLED`), `openedById`, `closedById?`, `openedAt`, `closedAt?`, `total` (cache).
+* **OrderItem** (Item do Pedido): `id`, `orderId`, `menuItemId`, `nameSnapshot`, `unitPriceSnapshot`, `quantity`, `notes?`.
+* **Payment** (Pagamento): `id`, `orderId`, `method` (`CASH`|`CARD`|`PIX`|... ), `amount`, `change?`, `paidAt`.
+* **Auth**: pode reutilizar **Employee** para login; senha/claims fora do escopo do Prisma (hash armazenado em tabela `Auth` ou no próprio Employee).
+
 
 ---
 
 ## Fluxo de Uso
 
-1. Criar mesas com número e capacidade.
-2. Cadastrar categorias e itens do cardápio.
-3. Abrir pedido vinculado à mesa, balcão ou viagem.
-4. Adicionar itens ao pedido (quantidade e preço atual do item).
-5. Registrar pagamentos até cobrir o total.
-6. Fechar o pedido e liberar a mesa.
+1. Criar mesas e, se necessário, reservas.
+2. Cadastrar categorias e itens do menu.
+3. Abrir **pedido/conta** para uma mesa/balcão/viagem.
+4. Adicionar **itens** (com snapshot de preço) e acompanhar status.
+5. Registrar **pagamentos** até cobrir o total.
+6. **Fechar** a conta e liberar a mesa.
+
+---
+
+## Autenticação & Autorização
+
+* **Login** → `/auth/login` retorna **JWT**.
+* Cliente envia `Authorization: Bearer <token>`.
+* Middleware **auth** valida token e injeta `req.user` (id, role).
+* **RBAC simples**: rotas sensíveis exigem `role` (ex.: `MANAGER` para gerenciar funcionários; `WAITER` para abrir/fechar conta).
 
 ---
 
 ## Endpoints (Resumo)
 
-* **Mesas:** listar, criar, ocupar, liberar.
-* **Cardápio:** listar, criar categoria, criar item.
-* **Pedidos:** abrir, detalhar, adicionar item, fechar.
-* **Pagamentos:** registrar por pedido.
+### Auth
 
----
+* `POST /auth/login` — recebe `{ email, senha }` → `{ token, user }`
 
-## Requisitos
+### Funcionários
 
-* Node.js 18 ou superior.
-* PostgreSQL acessível (local ou gerenciado).
-* Ambiente configurado com variáveis para URL do banco e porta do servidor.
-* React 
+* `GET /employees` — lista
+* `POST /employees` — cria (admin)
+* `PUT /employees/:id` — atualiza (admin)
+* `PATCH /employees/:id/toggle` — ativa/inativa (admin)
 
----
+### Mesas
 
-## Como Executar
+* `GET /tables` — lista
+* `POST /tables` — cria
+* `PATCH /tables/:id/status` — muda status (ex.: ocupar/liberar/bloquear)
 
-1. Clonar o repositório e instalar dependências.
-2. Definir variáveis de ambiente (URL do banco e porta do servidor).
-3. Criar a base e aplicar migrações para gerar as tabelas.
-4. Iniciar o servidor em modo desenvolvimento e verificar o healthcheck.
+### Reservas
 
----
+* `GET /reservations` — lista (filtros por data/mesa)
+* `POST /reservations` — cria
+* `PATCH /reservations/:id/cancel` — cancela
 
+### Cardápio
+
+* `GET /menu/categories` — lista categorias
+* `POST /menu/categories` — cria categoria
+* `GET /menu/items` — lista itens (filtros: `active`, `categoryId`)
+* `POST /menu/items` — cria item
+* `PUT /menu/items/:id` — atualiza
+* `PATCH /menu/items/:id/toggle` — ativa/inativa
+
+### Pedidos/Contas
+
+* `POST /orders` — abre pedido `{ type, tableId? }`
+* `GET /orders/:id` — detalhe (itens + pagamentos)
+* `POST /orders/:id/items` — add item `{ menuItemId, quantity, notes? }`
+* `PATCH /orders/:id/status` — muda status (ex.: `IN_PROGRESS`)
+* `POST /orders/:id/close` — tenta fechar (valida pagamentos == total)
+
+### Pagamentos
+
+* `POST /orders/:id/payments` — registra pagamento `{ method, amount, change? }`
+* `GET /orders/:id/payments` — lista pagamentos
+
+## Variáveis de Ambiente
+
+### Backend (`server/.env`)
+
+```
+DATABASE_URL=postgresql://user:pass@localhost:5432/pizzaria
+PORT=3333
+JWT_SECRET=sua_chave_segura
+JWT_EXPIRES_IN=20h
+```
 ## Decisões de Design
 
-* **Simplicidade do domínio:** sem áreas, tamanhos, modificadores, cupons ou descontos.
-* **Preço snapshot:** o preço do item é copiado para o item do pedido para manter histórico fiel.
-* **Total do pedido:** calculado pela soma de (quantidade × preço unitário) dos itens.
-* **Fechamento controlado:** só fecha quando o total estiver quitado pelos pagamentos.
-* **Estados claros:** mesas e pedidos possuem enums de status para lógica previsível.
+* **Simplicidade do domínio**: sem tamanhos/modificadores/cupons no MVP; favorece estabilidade.
+* **Total do pedido** calculado via service (soma de itens) e persistido no `Order.total`.
+* **Fechamento controlado**: só fecha com pagamentos suficientes.
+* **Enums de status** para mesas, pedidos e reservas.
+* **JWT + RBAC**: segurança simples e eficiente, extensível para perfis.
 
----
 
-## Roadmap
 
-* Reservas integradas ao fluxo de pedidos.
-* Painel de cozinha para pedidos em preparo.
-* Relatórios de vendas e indicadores operacionais.
-* Autenticação e perfis de acesso para funcionários.
-.
 
----
