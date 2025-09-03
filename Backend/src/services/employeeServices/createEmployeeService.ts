@@ -3,8 +3,6 @@ import { gerarHashDaSenha } from "../../helper/bcrypt";
 import { prisma } from "../../lib/prisma";
 import { CreateEmployeeData, employeeCargo } from "../../types/employee";
 
-
-
 export const createEmployeeService = async (
   data: CreateEmployeeData
 ): Promise<Employee> => {

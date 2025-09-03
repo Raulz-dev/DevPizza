@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const linkBase: React.CSSProperties = {
   padding: "10px 14px",
@@ -12,6 +14,14 @@ const linkBase: React.CSSProperties = {
 };
 
 export default function TopBar() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <header
       style={{
@@ -38,7 +48,6 @@ export default function TopBar() {
       >
         🍕 Pizzaria
       </div>
-
       <nav style={{ display: "flex", gap: 8 }}>
         <NavLink
           to="/mesas"
@@ -112,6 +121,27 @@ export default function TopBar() {
           Pagamento
         </NavLink>
       </nav>
+      <button
+        style={{
+          border: "none",
+          outline: "none",
+          borderRadius: 12,
+          padding: "10px 16px",
+          background: "#dc143c",
+          color: "#fff",
+          fontWeight: 700,
+          cursor: "pointer",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = "#000";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+        }}
+        onClick={handleLogout}
+      >
+        Sair
+      </button>
     </header>
   );
 }
