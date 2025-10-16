@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import AuthProvider from "./context/AuthProvider";
 import PrivateRoute from "./components/PrivateRoute";
 import TopBar from "./components/TopBar";
+import Reserva from "./pages/Reservas";
 
 export default function App() {
   return (
@@ -30,13 +31,11 @@ export default function App() {
               <Route path="/funcionarios" element={<Funcionarios />} />
               <Route path="/cardapio" element={<Cardapio />} />
               <Route path="/pagamento" element={<Pagamento />} />
+              <Route path="/reserva" element={<Reserva />} />
             </Route>
           </Route>
 
-          <Route
-            path="*"
-            element={<h2 style={{ padding: 24 }}>Página não encontrada</h2>}
-          />
+          <Route path="*" element={<h2 style={{ padding: 24 }}>Página não encontrada</h2>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

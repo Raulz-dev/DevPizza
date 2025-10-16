@@ -5,23 +5,20 @@ body {
   margin: 0;
 }
 
-/* Página de registro com imagem de fundo preenchendo tudo */
 .register-page {
-  /* Fallback desktop */
   height: 100vh;
-  /* Melhora em mobile (ignora barras de navegação) */
+
   height: 100dvh;
 
   display: grid;
   place-items: center;
   width: 100%;
 
-  /* imagem de fundo */
   background-image: url("/teste.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  background-color: #000; /* sem aspas */
+  background-color: #000;
 }
 
 .register-card {
