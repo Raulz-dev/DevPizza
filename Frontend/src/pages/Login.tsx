@@ -38,12 +38,12 @@ export default function Login() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="auth-form-card">
-      <h2 className="auth-form-title">Entrar</h2>
-      <p className="auth-form-subtitle">Acesse para gerenciar a operação da pizzaria.</p>
+      <h2 className="auth-form-title">Acesso da equipe</h2>
+      <p className="auth-form-subtitle">Entre para abrir o painel da operação da pizzaria.</p>
 
       <div className="auth-demo-box">
         <p>
-          Usuário padrão: <strong>raul@devpizza.com</strong>
+          Conta de degustação: <strong>raul@devpizza.com</strong>
         </p>
         <p>
           Senha: <strong>123456</strong>
@@ -54,14 +54,14 @@ export default function Login() {
       </div>
 
       <label htmlFor="email" className="auth-field-label">
-        E-mail
+        E-mail da equipe
       </label>
       <input
         id="email"
         type="email"
         className="auth-input"
         {...register("email", { required: true })}
-        placeholder="voce@empresa.com"
+        placeholder="cozinha@devpizza.com"
         autoComplete="email"
       />
 
@@ -74,7 +74,7 @@ export default function Login() {
           type={showPass ? "text" : "password"}
           className="auth-input"
           {...register("password", { required: true })}
-          placeholder="Digite sua senha"
+          placeholder="Digite a senha de acesso"
           autoComplete="current-password"
         />
         <button
@@ -90,7 +90,7 @@ export default function Login() {
       {error ? <p className="auth-form-error">{error}</p> : null}
 
       <button type="submit" disabled={isSubmitting} className="auth-submit">
-        {isSubmitting ? "Entrando..." : "Entrar"}
+        {isSubmitting ? "Preparando acesso..." : "Entrar no painel"}
       </button>
 
       <p className="auth-form-footer">

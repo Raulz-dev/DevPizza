@@ -34,23 +34,23 @@ export default function Register() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="auth-form-card">
-      <h2 className="auth-form-title">Criar conta</h2>
-      <p className="auth-form-subtitle">Cadastre um funcionário para acessar o sistema.</p>
+      <h2 className="auth-form-title">Cadastro da brigada</h2>
+      <p className="auth-form-subtitle">Adicione um novo colaborador para operar a pizzaria.</p>
 
       <label htmlFor="name" className="auth-field-label">
-        Nome
+        Nome do colaborador
       </label>
-      <input id="name" className="auth-input" {...register("name", { required: true })} placeholder="Nome completo" autoComplete="name" />
+      <input id="name" className="auth-input" {...register("name", { required: true })} placeholder="Nome completo da equipe" autoComplete="name" />
 
       <label htmlFor="email" className="auth-field-label">
-        E-mail
+        E-mail de acesso
       </label>
       <input
         id="email"
         type="email"
         className="auth-input"
         {...register("email", { required: true })}
-        placeholder="voce@empresa.com"
+        placeholder="gestao@devpizza.com"
         autoComplete="email"
       />
 
@@ -63,7 +63,7 @@ export default function Register() {
           type={showPass ? "text" : "password"}
           className="auth-input"
           {...register("senha", { required: true, minLength: 6 })}
-          placeholder="Crie uma senha"
+          placeholder="Crie uma senha de acesso"
           autoComplete="new-password"
         />
         <button
@@ -77,7 +77,7 @@ export default function Register() {
       </div>
 
       <label htmlFor="cargo" className="auth-field-label">
-        Cargo
+        Função na casa
       </label>
       <select id="cargo" className="auth-select" {...register("cargo", { required: true })}>
         {CARGOS.map((cargo) => (
@@ -90,12 +90,12 @@ export default function Register() {
       <label htmlFor="turno" className="auth-field-label">
         Turno
       </label>
-      <input id="turno" className="auth-input" {...register("turno", { required: true })} placeholder="Ex.: MANHÃ, TARDE, NOITE" />
+      <input id="turno" className="auth-input" {...register("turno", { required: true })} placeholder="Ex.: NOITE (forno), TARDE (salão)" />
 
       {error ? <p className="auth-form-error">{error}</p> : null}
 
       <button type="submit" disabled={isSubmitting} className="auth-submit">
-        {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+        {isSubmitting ? "Salvando cadastro..." : "Cadastrar colaborador"}
       </button>
 
       <p className="auth-form-footer">

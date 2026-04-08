@@ -1,23 +1,25 @@
-import { Flame, Pizza, ShieldCheck } from "lucide-react";
+import { Bike, Clock3, Flame, Pizza } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
 const highlights = [
   {
     icon: Pizza,
-    title: "Operação centralizada",
-    description: "Mesas, cardápio, pagamentos e equipe no mesmo painel.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Acesso seguro",
-    description: "Rotas privadas com autenticação e controle por sessão.",
+    title: "Receitas e comandas",
+    description: "Controle do salão, cardápio e pedidos em um único painel.",
   },
   {
     icon: Flame,
-    title: "Fluxo rápido",
-    description: "Interface enxuta para o dia a dia do salão.",
+    title: "Ritmo de cozinha",
+    description: "Acompanhe a operação do forno sem perder o timing do atendimento.",
+  },
+  {
+    icon: Clock3,
+    title: "Agilidade no salão",
+    description: "Visão rápida para equipe de atendimento, caixa e gestão.",
   },
 ];
+
+const menuHighlights = ["Organize pagamentos", "Gerencie funcionários", "Entrega e balcão integrados", "Dashboard em tempo real"];
 
 export function AuthLayout() {
   return (
@@ -28,7 +30,8 @@ export function AuthLayout() {
 
           <div className="auth-hero-content">
             <span className="auth-pill">DevPizza</span>
-            <h1>Gestão da pizzaria com clareza, ritmo e controle.</h1>
+            <h1>Sua pizzaria com cara de casa cheia e operação de alto nível.</h1>
+            <p className="auth-hero-text">Organize salão, equipe e pedidos com um painel pensado para o ritmo real de uma pizzaria.</p>
 
             <div className="auth-highlight-grid">
               {highlights.map((item) => (
@@ -40,6 +43,18 @@ export function AuthLayout() {
                   <p>{item.description}</p>
                 </article>
               ))}
+            </div>
+
+            <div className="auth-menu-preview">
+              <div className="auth-menu-head">
+                <Bike size={18} />
+                <span>Gerencie sua pizzaria</span>
+              </div>
+              <ul>
+                {menuHighlights.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
