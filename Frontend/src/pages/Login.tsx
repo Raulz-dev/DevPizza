@@ -1,88 +1,104 @@
-import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../lib/api";
-import "../css/login.css";
+import { useAuth } from "../context/useAuth";
 
-type FormData = { email: string; password: string };
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<FormData>();
+
   const [error, setError] = useState("");
   const [showPass, setShowPass] = useState(false);
+
+  const fillDemoUser = () => {
+    setValue("email", "raul@devpizza.com");
+    setValue("password", "123456");
+  };
 
   const onSubmit = async (values: FormData) => {
     try {
       setError("");
-      const { data } = await api.post("/login", values);
-
-      if (!data?.token) {
-        setError("Resposta inválida do servidor.");
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-
+      await login(values.email, values.password);
       navigate("/mesas", { replace: true });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      setError(e?.response?.data?.error ?? "Credenciais inválidas");
+    } catch {
+      setError("Credenciais inválidas.");
     }
   };
 
   return (
-    <div className="login-page">
-      <form onSubmit={handleSubmit(onSubmit)} className="login-card">
-        <h1 className="login-title">Acessar conta da pizzaria</h1>
-        <p className="login-subtitle">Seja Bem-vindo!</p>
+    <form onSubmit={handleSubmit(onSubmit)} className="auth-form-card">
+      <h2 className="auth-form-title">Entrar</h2>
+      <p className="auth-form-subtitle">Acesse para gerenciar a operação da pizzaria.</p>
 
-        <label htmlFor="email" className="login-label">
-          E-mail
-        </label>
-        <input
-          id="email"
-          type="email"
-          {...register("email", { required: true })}
-          className="login-input"
-        />
-
-        <label htmlFor="password" className="login-label">
-          Senha
-        </label>
-        <div className="login-passwrap">
-          <input
-            id="password"
-            type={showPass ? "text" : "password"}
-            {...register("password", { required: true })}
-            className="login-input"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPass((s) => !s)}
-            className="login-passbtn"
-          >
-            {showPass ? "🙈" : "👁️"}
-          </button>
-        </div>
-
-        {error && <p className="login-error">{error}</p>}
-
-        <button type="submit" disabled={isSubmitting} className="login-submit">
-          {isSubmitting ? "Entrando..." : "Acessar conta da pizzaria"}
-        </button>
-
-        <p className="login-footer">
-          Não tem conta?{" "}
-          <Link to="/register" className="login-link">
-            Cadastre-se
-          </Link>
+      <div className="auth-demo-box">
+        <p>
+          Usuário padrão: <strong>raul@devpizza.com</strong>
         </p>
-      </form>
-    </div>
+        <p>
+          Senha: <strong>123456</strong>
+        </p>
+        <button type="button" className="auth-demo-fill" onClick={fillDemoUser}>
+          Preencher automático
+        </button>
+      </div>
+
+      <label htmlFor="email" className="auth-field-label">
+        E-mail
+      </label>
+      <input
+        id="email"
+        type="email"
+        className="auth-input"
+        {...register("email", { required: true })}
+        placeholder="voce@empresa.com"
+        autoComplete="email"
+      />
+
+      <label htmlFor="password" className="auth-field-label">
+        Senha
+      </label>
+      <div className="auth-password-wrap">
+        <input
+          id="password"
+          type={showPass ? "text" : "password"}
+          className="auth-input"
+          {...register("password", { required: true })}
+          placeholder="Digite sua senha"
+          autoComplete="current-password"
+        />
+        <button
+          type="button"
+          className="auth-password-toggle"
+          onClick={() => setShowPass((current) => !current)}
+          aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}
+        >
+          {showPass ? "Ocultar" : "Mostrar"}
+        </button>
+      </div>
+
+      {error ? <p className="auth-form-error">{error}</p> : null}
+
+      <button type="submit" disabled={isSubmitting} className="auth-submit">
+        {isSubmitting ? "Entrando..." : "Entrar"}
+      </button>
+
+      <p className="auth-form-footer">
+        Não tem conta?{" "}
+        <Link to="/register" className="auth-form-link">
+          Cadastre-se
+        </Link>
+      </p>
+    </form>
   );
 }

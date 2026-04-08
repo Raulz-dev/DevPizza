@@ -1,147 +1,109 @@
-import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../lib/api";
-import "../css/register.css";
+import { type RegisterPayload } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
-type FormData = {
-  name: string;
-  email: string;
-  senha: string;
-  cargo: "ATTENDANT" | "MANAGER" | "KITCHEN";
-  turno: string;
-};
-
-const CARGOS: FormData["cargo"][] = ["ATTENDANT", "MANAGER", "KITCHEN"];
+const CARGOS: RegisterPayload["cargo"][] = ["ATTENDANT", "MANAGER", "KITCHEN"];
 
 export default function Register() {
   const navigate = useNavigate();
+  const { register: registerUser } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
     reset,
-  } = useForm<FormData>({
+  } = useForm<RegisterPayload>({
     defaultValues: { cargo: "ATTENDANT", turno: "" },
   });
 
   const [error, setError] = useState("");
   const [showPass, setShowPass] = useState(false);
 
-  const onSubmit = async (values: FormData) => {
+  const onSubmit = async (values: RegisterPayload) => {
     try {
       setError("");
-      await api.post("/register", {
-        name: values.name,
-        email: values.email,
-        senha: values.senha,
-        cargo: values.cargo,
-        turno: values.turno,
-      });
+      await registerUser(values);
       reset();
       navigate("/login");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      setError(e?.response?.data?.error ?? "Erro ao registrar funcionário");
+    } catch {
+      setError("Não foi possível concluir o cadastro.");
     }
   };
 
   return (
-    <div className="register-page">
-      <form onSubmit={handleSubmit(onSubmit)} className="register-card">
-        <h1 className="register-title">Criar conta</h1>
-        <p className="register-subtitle">
-          Cadastre o funcionário para acessar o sistema
-        </p>
+    <form onSubmit={handleSubmit(onSubmit)} className="auth-form-card">
+      <h2 className="auth-form-title">Criar conta</h2>
+      <p className="auth-form-subtitle">Cadastre um funcionário para acessar o sistema.</p>
 
-        <label htmlFor="name" className="register-label">
-          Nome
-        </label>
+      <label htmlFor="name" className="auth-field-label">
+        Nome
+      </label>
+      <input id="name" className="auth-input" {...register("name", { required: true })} placeholder="Nome completo" autoComplete="name" />
+
+      <label htmlFor="email" className="auth-field-label">
+        E-mail
+      </label>
+      <input
+        id="email"
+        type="email"
+        className="auth-input"
+        {...register("email", { required: true })}
+        placeholder="voce@empresa.com"
+        autoComplete="email"
+      />
+
+      <label htmlFor="senha" className="auth-field-label">
+        Senha
+      </label>
+      <div className="auth-password-wrap">
         <input
-          id="name"
-          className="register-input"
-          {...register("name", { required: true })}
-          placeholder="Nome completo"
-          autoComplete="name"
+          id="senha"
+          type={showPass ? "text" : "password"}
+          className="auth-input"
+          {...register("senha", { required: true, minLength: 6 })}
+          placeholder="Crie uma senha"
+          autoComplete="new-password"
         />
-
-        <label htmlFor="email" className="register-label">
-          E-mail
-        </label>
-        <input
-          id="email"
-          type="email"
-          className="register-input"
-          {...register("email", { required: true })}
-          placeholder="voce@exemplo.com"
-          autoComplete="email"
-        />
-
-        <label htmlFor="senha" className="register-label">
-          Senha
-        </label>
-        <div className="register-passwrap">
-          <input
-            id="senha"
-            type={showPass ? "text" : "password"}
-            className="register-input"
-            {...register("senha", { required: true, minLength: 6 })}
-            placeholder="Crie uma senha"
-            autoComplete="new-password"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPass((s) => !s)}
-            aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}
-            className="register-passbtn"
-            title={showPass ? "Ocultar senha" : "Mostrar senha"}
-          >
-            {showPass ? "🙈" : "👁️"}
-          </button>
-        </div>
-
-        <label htmlFor="cargo" className="register-label">
-          Cargo
-        </label>
-        <select
-          id="cargo"
-          className="register-select"
-          {...register("cargo", { required: true })}
-        >
-          {CARGOS.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="turno" className="register-label">
-          Turno
-        </label>
-        <input
-          id="turno"
-          className="register-input"
-          {...register("turno", { required: true })}
-          placeholder='Ex.: "MANHÃ", "TARDE", "NOITE"...'
-        />
-
-        {error && <p className="register-error">{error}</p>}
-
         <button
-          type="submit"
-          disabled={isSubmitting}
-          className="register-submit"
+          type="button"
+          className="auth-password-toggle"
+          onClick={() => setShowPass((current) => !current)}
+          aria-label={showPass ? "Ocultar senha" : "Mostrar senha"}
         >
-          {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+          {showPass ? "Ocultar" : "Mostrar"}
         </button>
+      </div>
 
-        <p className="register-footer">
-          Já tem conta?{" "}
-          <Link to="/login" className="register-link">
-            Entrar
-          </Link>
-        </p>
-      </form>
-    </div>
+      <label htmlFor="cargo" className="auth-field-label">
+        Cargo
+      </label>
+      <select id="cargo" className="auth-select" {...register("cargo", { required: true })}>
+        {CARGOS.map((cargo) => (
+          <option key={cargo} value={cargo}>
+            {cargo}
+          </option>
+        ))}
+      </select>
+
+      <label htmlFor="turno" className="auth-field-label">
+        Turno
+      </label>
+      <input id="turno" className="auth-input" {...register("turno", { required: true })} placeholder="Ex.: MANHÃ, TARDE, NOITE" />
+
+      {error ? <p className="auth-form-error">{error}</p> : null}
+
+      <button type="submit" disabled={isSubmitting} className="auth-submit">
+        {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+      </button>
+
+      <p className="auth-form-footer">
+        Já tem conta?{" "}
+        <Link to="/login" className="auth-form-link">
+          Entrar
+        </Link>
+      </p>
+    </form>
   );
 }
